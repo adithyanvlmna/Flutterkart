@@ -5,6 +5,7 @@ import 'package:flutterkart/core/app_theme/app_styles.dart';
 import 'package:flutterkart/core/utils/app_size.dart';
 import 'package:flutterkart/core/utils/validator.dart';
 import 'package:flutterkart/view/auth/otp_view.dart';
+import 'package:flutterkart/view/auth/resgister_view.dart';
 import 'package:flutterkart/widgets/common_button.dart';
 import 'package:flutterkart/widgets/common_texfield.dart';
 import 'package:flutterkart/widgets/common_text_button.dart';
@@ -43,7 +44,8 @@ class LoginView extends StatelessWidget {
                   style: AppStyles.normalText,
                 ),
                 CommonTexfield(
-                   validator: (p0) =>  AppValidator.fieldValidation(p0, "Email"),
+                    validator: (p0) =>
+                        AppValidator.fieldValidation(p0, "Email"),
                     hintText: "Enter your email",
                     controller: value.emialController),
                 Text(
@@ -51,10 +53,11 @@ class LoginView extends StatelessWidget {
                   style: AppStyles.normalText,
                 ),
                 CommonTexfield(
-                  validator: (p0) =>  AppValidator.fieldValidation(p0, "Password"),
+                    validator: (p0) =>
+                        AppValidator.fieldValidation(p0, "Password"),
                     isObscure: true,
                     hintText: "Enter your Password",
-                    controller: value.emialController),
+                    controller: value.passwordController),
                 Align(
                   alignment: Alignment.centerRight,
                   child: CommonTextButton(
@@ -62,10 +65,9 @@ class LoginView extends StatelessWidget {
                 ),
                 CommonButton(
                     onTap: () {
-                       if(value.formKey.currentState!.validate()){
-                        
+                      if (value.formKey.currentState!.validate()) {
+                        value.loginUser(context);
                       }
-                    
                     },
                     buttonText: "Log In"),
                 Row(
@@ -88,10 +90,11 @@ class LoginView extends StatelessWidget {
                     ))
                   ],
                 ),
-                custonButton(context, "Login wIth OTP",
-                    "assets/images/otp_img.png", () {
-                        Navigator.pushNamed(context, OtpView.routeName);
-                    }),
+                custonButton(
+                    context, "Login wIth OTP", "assets/images/otp_img.png", () {
+                  value.getOtp(context);
+                  
+                }),
                 custonButton(context, "Continue with Google",
                     "assets/images/google_img.png", () {}),
                 custonButton(context, "Continue with Facebook",
@@ -101,7 +104,11 @@ class LoginView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Don’t have an account?"),
-                    CommonTextButton(onPressed: () {}, text: "Sign Up")
+                    CommonTextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, ResgisterView.routeName);
+                        },
+                        text: "Sign Up")
                   ],
                 )
               ],

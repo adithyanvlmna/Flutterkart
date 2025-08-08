@@ -14,59 +14,58 @@ class OtpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Consumer<LoginProvider>(
-      builder: (context,value,child) {
-        return Scaffold(
-            backgroundColor: AppColor.whiteColor,
-            body: Padding(
-              padding: const EdgeInsets.all(22.0),
-              child: Form(
-              key:value.otpformKey,
-                child: Column(
-                  spacing: 10,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Consumer<LoginProvider>(builder: (context, value, child) {
+      return Scaffold(
+        backgroundColor: AppColor.whiteColor,
+        body: Padding(
+          padding: const EdgeInsets.all(22.0),
+          child: Form(
+            key: value.otpformKey,
+            child: Column(
+              spacing: 10,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 40,
+                ),
+                Text(
+                  "Sign in to your \nAccount",
+                  style: AppStyles.loginText,
+                ),
+                Text(
+                  "Enter the OTP code we sent to${value.emialController.text} Need to edit the email ",
+                  style: AppStyles.normalText,
+                ),
+                Text(
+                  "OTP",
+                  style: AppStyles.normalText,
+                ),
+                CommonTexfield(
+                    validator: (p0) => AppValidator.fieldValidation(p0, "OTP"),
+                    hintText: "Enter your OTP",
+                    controller: value.otpController),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 40,
-                    ),
+                    CommonTextButton(onPressed: () {}, text: "Resend OTP"),
                     Text(
-                      "Sign in to your \nAccount",
-                      style: AppStyles.loginText,
+                      "in (00:16)",
+                      style: TextStyle(color: Colors.red),
                     ),
-                    Text(
-                      "Enter the OTP code we sent to${value.emialController.text} Need to edit the email ",
-                      style: AppStyles.normalText,
-                    ),
-                    Text(
-                      "OTP",
-                      style: AppStyles.normalText,
-                    ),
-                    CommonTexfield(
-                       validator: (p0) =>  AppValidator.fieldValidation(p0, "OTP"),
-                        hintText: "Enter your OTP",
-                        controller: value.otpController),
-                   
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CommonTextButton(
-                            onPressed: () {}, text: "Resend OTP"),
-                            Text("in (00:16)",style:  TextStyle(color:Colors.red ),),
-                      ],
-                    ),
-                    CommonButton(onTap: () {
-                      if(value.otpformKey.currentState!.validate()){
-
-                      }
-                    }, buttonText: "Verify OTP"),
-                  
-                  
                   ],
                 ),
-              ),
+                CommonButton(
+                    onTap: () {
+                      if (value.otpformKey.currentState!.validate()) {
+                        value.verifyOtp(context);
+                      }
+                    },
+                    buttonText: "Verify OTP"),
+              ],
             ),
-          );
-      }
-    );
+          ),
+        ),
+      );
+    });
   }
 }
