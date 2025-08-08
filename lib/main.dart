@@ -1,11 +1,15 @@
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterkart/controller/login_provider.dart';
 import 'package:flutterkart/routes.dart';
 import 'package:flutterkart/view/initial_view/welcome_view.dart';
+import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (ctx)=> LoginProvider())],
+    child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

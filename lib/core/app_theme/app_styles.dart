@@ -7,4 +7,14 @@ class AppStyles {
     fontSize: 26,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle loginText = TextStyle(
+    color: AppColor.blackColor,
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+  );
+  static TextStyle normalText = TextStyle(
+    color: AppColor.greyColor,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+  );
 }
