@@ -36,7 +36,7 @@ class OtpView extends StatelessWidget {
                       style: AppStyles.loginText,
                     ),
                     Text(
-                      "Enter the OTP code we sent to${value.emialController.text} Need to edit the email ",
+                      "Enter the OTP code we sent to ${value.emialController.text.toString()} Need to edit the email ",
                       style: AppStyles.normalText,
                     ),
                     Text(

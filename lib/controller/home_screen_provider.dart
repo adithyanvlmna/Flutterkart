@@ -14,12 +14,12 @@ class HomeScreenProvider extends ChangeNotifier {
   AppState _setDashBoardState = AppState.noError;
   AppState get setDashBoardState => _setDashBoardState;
   bool isLoadingMore = false;
-bool hasMoreData = true;
-int currentPage = 1;
+  bool hasMoreData = true;
+  int currentPage = 1;
   List<CarousalModel> carousalData = [];
   List<CategoryModel> categoryModel = [];
   List<ProductModel> productModel = [];
-
+  TextEditingController searchController = TextEditingController();
   List<String> imgPath = [
     "assets/images/mobile_img.png",
     "assets/images/tv_img.jfif",
@@ -32,6 +32,17 @@ int currentPage = 1;
     "assets/images/gift_img.jfif",
     "assets/images/remote_img.jfif"
   ];
+
+  onDataClear() {
+    isLoadingMore = false;
+    hasMoreData = true;
+    currentPage = 1;
+    carousalData = [];
+    categoryModel = [];
+    productModel = [];
+    searchController.clear();
+    notifyListeners();
+  }
 
   Future<void> loadHomeProducts() async {
     setDashBordState(AppState.loading);
@@ -64,42 +75,39 @@ int currentPage = 1;
   }
 
   Future<void> loadProducts() async {
- 
-  if (isLoadingMore || !hasMoreData) return;
+    if (isLoadingMore || !hasMoreData) return;
 
-  isLoadingMore = true;
-  notifyListeners();
-
-  String url = ApiUrls.baseUrl.trim() +
-      ApiUrls.loadProducts(shopid: 1, curPage: currentPage);
-
-  try {
-    final response = await http.get(Uri.parse(url));
-
-    print(url);
-
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-      List<dynamic> decodedData = result["data"]["data"];
-
-     
-      if (decodedData.isEmpty) {
-        hasMoreData = false;
-      } else {
-       
-        productModel.addAll(
-          decodedData.map((e) => ProductModel.fromJson(e)).toList(),
-        );
-        currentPage++;
-      }
-    } else {
-      print("Error: ${response.statusCode}");
-    }
-  } catch (e) {
-    print("Exception occurred: $e");
-  } finally {
-    isLoadingMore = false;
+    isLoadingMore = true;
     notifyListeners();
+
+    String url = ApiUrls.baseUrl.trim() +
+        ApiUrls.loadProducts(shopid: 1, curPage: currentPage);
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      print(url);
+
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+        List<dynamic> decodedData = result["data"]["data"];
+
+        if (decodedData.isEmpty) {
+          hasMoreData = false;
+        } else {
+          productModel.addAll(
+            decodedData.map((e) => ProductModel.fromJson(e)).toList(),
+          );
+          currentPage++;
+        }
+      } else {
+        print("Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Exception occurred: $e");
+    } finally {
+      isLoadingMore = false;
+      notifyListeners();
+    }
   }
-}
 }

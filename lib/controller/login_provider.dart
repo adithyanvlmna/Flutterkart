@@ -19,8 +19,8 @@ class LoginProvider extends ChangeNotifier {
   UserModel? userdata;
   bool isLoading = false;
   final regformKey = GlobalKey<FormState>();
-   final formKey = GlobalKey<FormState>();
-   final otpformKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
+  final otpformKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emialController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -69,7 +69,8 @@ class LoginProvider extends ChangeNotifier {
           userdata = UserModel.fromJson(userDate);
           print(userdata?.email);
           await pref.setString("access_token", result["access_token"]);
-          Navigator.pushNamed(context, BottomNavView.routeName);
+          
+           Navigator.popAndPushNamed(context, BottomNavView.routeName);
           showSnackbar(
               msg: result["message"], color: Colors.green, context: context);
           onLogindataclear();
@@ -109,6 +110,7 @@ class LoginProvider extends ChangeNotifier {
               color: Colors.green,
               context: context);
           Navigator.pushNamed(context, OtpView.routeName);
+          
         } else {
           showSnackbar(
               msg: result["message"], color: Colors.red, context: context);
@@ -144,8 +146,9 @@ class LoginProvider extends ChangeNotifier {
           userdata = UserModel.fromJson(userDate);
           print(userdata?.email);
           await pref.setString("access_token", result["access_token"]);
+          
+          Navigator.popAndPushNamed(context, BottomNavView.routeName);
           onOtpdataclear();
-          Navigator.pushNamed(context, HomeView.routeName);
           showSnackbar(
               msg: result["message"], color: Colors.green, context: context);
           onLogindataclear();
@@ -183,7 +186,8 @@ class LoginProvider extends ChangeNotifier {
         isLoad(false);
         showSnackbar(
             msg: result["message"], color: Colors.green, context: context);
-        Navigator.pop(context);
+        Navigator.popAndPushNamed(context, LoginView.routeName);
+        
         onregisterViewclear();
       } else {
         isLoad(false);

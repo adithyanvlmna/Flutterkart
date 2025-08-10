@@ -34,37 +34,33 @@ class _HomeViewState extends State<HomeView> {
     _topSellingController = ScrollController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      LoginProvider loginProvider =
-          Provider.of<LoginProvider>(context, listen: false);
       HomeScreenProvider provider =
           Provider.of<HomeScreenProvider>(context, listen: false);
       provider.loadHomeProducts();
       await provider.loadProducts();
     });
 
-   _topSellingController.addListener(() {
-  if (_topSellingController.position.pixels >=
-      _topSellingController.position.maxScrollExtent - 200) {
-   
-    final provider =
-        Provider.of<HomeScreenProvider>(context, listen: false);
+    _topSellingController.addListener(() {
+      if (_topSellingController.position.pixels >=
+          _topSellingController.position.maxScrollExtent - 200) {
+        final provider =
+            Provider.of<HomeScreenProvider>(context, listen: false);
 
-    if (!provider.isLoadingMore && provider.hasMoreData) { 
-      provider.loadProducts();
-    }
-  }
-});
+        if (!provider.isLoadingMore && provider.hasMoreData) {
+          provider.loadProducts();
+        }
+      }
+    });
     super.initState();
   }
 
   @override
- 
-
   Widget build(BuildContext context) {
     return Consumer<HomeScreenProvider>(builder: (context, value, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppColor.whiteColor,
           title: Column(
             children: [
@@ -104,146 +100,159 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
         body: value.setDashBoardState == AppState.loading
-            ? ConnectivityWrapperWidget(child: HomeBodyShimmer())
+            ? HomeBodyShimmer()
             : SafeArea(
-                child: ConnectivityWrapperWidget(
-                  child: AnimationLimiter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: RefreshIndicator(
-                        color: AppColor.blackColor,
-                        onRefresh: () => value.loadHomeProducts(),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            spacing: 5,
-                            children: [
-                              CommonTexfield(
-                                hintText: "Search",
-                                controller: TextEditingController(),
-                                prefixIcon: Icons.search,
-                              ),
-                              animatedCarousel(value),
-                              animatedCarouselIndicator(value),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Categories",
-                                    style: AppStyles.headerText,
-                                  ),
-                                  CommonTextButton(
-                                    onPressed: () {},
-                                    text: "See All",
-                                    color: AppColor.blackColor,
-                                  ),
-                                ],
-                              ),
-                              value.categoryModel.isNotEmpty
-                                  ? SizedBox(
-                                      height: screenHeight(context, 6),
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: value.categoryModel.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return AnimationConfiguration
-                                              .staggeredList(
-                                            position: index,
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            child: SlideAnimation(
-                                              horizontalOffset: 50.0,
-                                              child: FadeInAnimation(
-                                                child: CategoryCircle(
-                                                  text: value
-                                                      .categoryModel[index]
-                                                      .categoryName,
-                                                  imgpath: value.imgPath[index],
-                                                ),
+                child: AnimationLimiter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: RefreshIndicator(
+                      color: AppColor.blackColor,
+                      onRefresh: () => value.loadHomeProducts(),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          spacing: 5,
+                          children: [
+                            CommonTexfield(
+                              hintText: "Search",
+                              controller: value.searchController,
+                              prefixIcon: Icons.search,
+                            ),
+                            animatedCarousel(value),
+                            animatedCarouselIndicator(value),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Categories",
+                                  style: AppStyles.headerText,
+                                ),
+                                CommonTextButton(
+                                  onPressed: () {},
+                                  text: "See All",
+                                  color: AppColor.blackColor,
+                                ),
+                              ],
+                            ),
+                            value.categoryModel.isNotEmpty
+                                ? SizedBox(
+                                    height: screenHeight(context, 6),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: value.categoryModel.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return AnimationConfiguration
+                                            .staggeredList(
+                                          position: index,
+                                          duration: const Duration(
+                                              milliseconds: 500),
+                                          child: SlideAnimation(
+                                            horizontalOffset: 50.0,
+                                            child: FadeInAnimation(
+                                              child: CategoryCircle(
+                                                text: value
+                                                    .categoryModel[index]
+                                                    .categoryName,
+                                                imgpath: value.imgPath[index],
                                               ),
                                             ),
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColor.blackColor,
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Top Selling",
-                                    style: AppStyles.headerText,
+                                  )
+                                : Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColor.blackColor,
+                                    ),
                                   ),
-                                  CommonTextButton(
-                                    onPressed: () {},
-                                    text: "See All",
-                                    color: AppColor.blackColor,
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Top Selling",
+                                  style: AppStyles.headerText,
+                                ),
+                                CommonTextButton(
+                                  onPressed: () {},
+                                  text: "See All",
+                                  color: AppColor.blackColor,
+                                ),
+                              ],
+                            ),
+                            value.productModel.isNotEmpty
+                                ? SizedBox(
+                                    height: screenHeight(context, 4.2),
+                                    child: ListView.builder(
+                                      controller: _topSellingController,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: value.productModel.length +
+                                          (value.isLoadingMore ? 1 : 0),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        if (index ==
+                                            value.productModel.length) {
+                                          return Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child:
+                                                  CircularProgressIndicator(
+                                                      color: AppColor
+                                                          .blackColor),
+                                            ),
+                                          );
+                                        }
+                                        return AnimationConfiguration
+                                            .staggeredList(
+                                          position: index,
+                                          duration: const Duration(
+                                              milliseconds: 500),
+                                          child: SlideAnimation(
+                                            horizontalOffset: 50.0,
+                                            child: FadeInAnimation(
+                                              child: CustomProductCard(
+                                                onTap: () {},
+                                                imagePath:
+                                                    "assets/images/mac_img.jfif",
+                                                productName: value
+                                                    .productModel[index].name,
+                                                price: value
+                                                    .productModel[index]
+                                                    .price,
+                                                rating: 4,
+                                                reviewCount: value
+                                                    .productModel[index]
+                                                    .loyaltyEarningPoints,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : Center(
+                                    child: CircularProgressIndicator(
+                                        color: AppColor.blackColor),
                                   ),
-                                ],
-                              ),
-                           value.productModel.isNotEmpty
-    ? SizedBox(
-        height: screenHeight(context, 4.2),
-        child: ListView.builder(
-          controller: _topSellingController,
-          scrollDirection: Axis.horizontal,
-          itemCount: value.productModel.length + (value.isLoadingMore ? 1 : 0),
-          itemBuilder: (BuildContext context, int index) {
-            if (index == value.productModel.length) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(color: AppColor.blackColor),
-                ),
-              );
-            }
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                horizontalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: CustomProductCard(
-                    onTap: () {},
-                    imagePath: "assets/images/mac_img.jfif",
-                    productName: value.productModel[index].name,
-                    price: value.productModel[index].price,
-                    rating: 4,
-                    reviewCount: value.productModel[index].loyaltyEarningPoints,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      )
-    : Center(
-        child: CircularProgressIndicator(color: AppColor.blackColor),
-      ),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Best offers",
-                                    style: AppStyles.headerText,
-                                  ),
-                                  CommonTextButton(
-                                    onPressed: () {},
-                                    text: "See All",
-                                    color: AppColor.blackColor,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Best offers",
+                                  style: AppStyles.headerText,
+                                ),
+                                CommonTextButton(
+                                  onPressed: () {},
+                                  text: "See All",
+                                  color: AppColor.blackColor,
+                                ),
+                              ],
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -290,7 +299,7 @@ class _HomeViewState extends State<HomeView> {
               builder: (context) => ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
-                  'assets/images/banner image.png', 
+                  'assets/images/banner image.png',
                   fit: BoxFit.cover,
                 ),
               ),

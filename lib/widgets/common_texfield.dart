@@ -85,7 +85,7 @@ class _CommonTexfieldState extends State<CommonTexfield> {
         focusedBorder: border(AppColor.blackColor),
         enabledBorder: border(AppColor.greyColor),
         errorBorder: border(Colors.red),
-        focusedErrorBorder: border(Colors.red),
+        focusedErrorBorder: border(AppColor.blackColor),
       ),
     );
   }
