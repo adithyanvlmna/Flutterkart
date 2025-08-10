@@ -85,7 +85,7 @@ API success flags:** Some API responses do not return a proper `success` field (
 
  1. **Clone the repository**
    ```bash
-   git clone <repository_url>
+   git clone <https://github.com/adithyanvlmna/Flutterkart.git>
    cd flutterkart
 
  2.  Install dependencies
