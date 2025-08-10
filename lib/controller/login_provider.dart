@@ -4,18 +4,23 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutterkart/core/utils/api_urls.dart';
-import 'package:flutterkart/core/utils/snachbar_helper.dart';
+import 'package:flutterkart/core/utils/snackbar_helper.dart';
 import 'package:flutterkart/model/user_model.dart';
+import 'package:flutterkart/view/auth/login_view.dart';
 import 'package:flutterkart/view/auth/otp_view.dart';
+import 'package:flutterkart/view/bottom_nav_view.dart';
 import 'package:flutterkart/view/home_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider extends ChangeNotifier {
+  bool isLoadingMore = false;
+  bool hasMoreData = true;
   UserModel? userdata;
-  final formKey = GlobalKey<FormState>();
-  final otpformKey = GlobalKey<FormState>();
+  bool isLoading = false;
   final regformKey = GlobalKey<FormState>();
+   final formKey = GlobalKey<FormState>();
+   final otpformKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emialController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -26,24 +31,26 @@ class LoginProvider extends ChangeNotifier {
     passwordController.clear();
     emialController.clear();
     notifyListeners();
+    isLoad(false);
   }
 
   void onOtpdataclear() {
     otpController.clear();
     emialController.clear();
+    isLoad(false);
     notifyListeners();
   }
 
   void onregisterViewclear() {
-    emialController.clear();
     nameController.clear();
     phoneController.clear();
     idController.clear();
-    passwordController.clear();
+    isLoad(false);
     notifyListeners();
   }
 
   Future<void> loginUser(context) async {
+    isLoad(true);
     final pref = await SharedPreferences.getInstance();
     String url = ApiUrls.baseUrl.trim() + ApiUrls.loginUrl.trim();
     final response = await http.post(Uri.parse(url), body: {
@@ -56,23 +63,28 @@ class LoginProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         if (result["status"] == true) {
+          isLoad(false);
           Map<String, dynamic> userDate = result["user"];
           print(userDate);
           userdata = UserModel.fromJson(userDate);
           print(userdata?.email);
           await pref.setString("access_token", result["access_token"]);
-          Navigator.pushNamed(context, HomeView.routeName);
+          Navigator.pushNamed(context, BottomNavView.routeName);
           showSnackbar(
               msg: result["message"], color: Colors.green, context: context);
           onLogindataclear();
         } else {
+          isLoad(false);
           showSnackbar(
               msg: result["message"], color: Colors.red, context: context);
         }
       }
     } catch (e) {
+      isLoad(false);
       print(e);
       showSnackbar(msg: e.toString(), color: Colors.red, context: context);
+    } finally {
+      isLoad(false);
     }
   }
 
@@ -109,8 +121,12 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<void> verifyOtp(context) async {
+    isLoad(true);
+    print("----------------${emialController.text.trim()}");
+    print("----------------${otpController.text.trim()}");
     final pref = await SharedPreferences.getInstance();
     String url = ApiUrls.baseUrl.trim() + ApiUrls.verifyotpUrl.trim();
+    print(url);
     final response = await http.post(Uri.parse(url), body: {
       "email": emialController.text.trim(),
       "otp": otpController.text.trim(),
@@ -122,6 +138,7 @@ class LoginProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         var result = jsonDecode(response.body);
         if (result["status"] == true) {
+          isLoad(false);
           Map<String, dynamic> userDate = result["user"];
           print(userDate);
           userdata = UserModel.fromJson(userDate);
@@ -133,17 +150,22 @@ class LoginProvider extends ChangeNotifier {
               msg: result["message"], color: Colors.green, context: context);
           onLogindataclear();
         } else {
+          isLoad(false);
           showSnackbar(
               msg: result["message"], color: Colors.red, context: context);
         }
       }
     } catch (e) {
+      isLoad(false);
       print(e);
       showSnackbar(msg: e.toString(), color: Colors.red, context: context);
+    } finally {
+      isLoad(false);
     }
   }
 
   Future<void> registerUser(context) async {
+    isLoad(true);
     String url = ApiUrls.baseUrl.trim() + ApiUrls.registerUrl.trim();
     final response = await http.post(Uri.parse(url), body: {
       "name": nameController.text.trim(),
@@ -158,14 +180,26 @@ class LoginProvider extends ChangeNotifier {
     try {
       var result = jsonDecode(response.body);
       if (result["status"]) {
+        isLoad(false);
         showSnackbar(
             msg: result["message"], color: Colors.green, context: context);
+        Navigator.pop(context);
+        onregisterViewclear();
       } else {
+        isLoad(false);
         showSnackbar(
             msg: result["message"], color: Colors.red, context: context);
       }
     } catch (e) {
+      isLoad(false);
       showSnackbar(msg: e.toString(), color: Colors.red, context: context);
-    } finally {}
+    } finally {
+      isLoad(false);
+    }
+  }
+
+  void isLoad(bool newState) {
+    isLoading = newState;
+    notifyListeners();
   }
 }

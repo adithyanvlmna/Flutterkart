@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterkart/controller/home_screen_provider.dart';
 import 'package:flutterkart/controller/login_provider.dart';
 import 'package:flutterkart/routes.dart';
+import 'package:flutterkart/view/bottom_nav_view.dart';
+import 'package:flutterkart/view/home_view.dart';
 import 'package:flutterkart/view/initial_view/welcome_view.dart';
+import 'package:flutterkart/view/splash_view.dart';
 import 'package:provider/provider.dart';
 
 
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConnectivityAppWrapper(
       app: MaterialApp(
-        initialRoute: WelcomeView.routeName,
+        initialRoute: SplashView.routeName,
         debugShowCheckedModeBanner: false,
         title: 'FlutterKart',
        routes: routes,

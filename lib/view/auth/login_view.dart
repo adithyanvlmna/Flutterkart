@@ -3,6 +3,7 @@ import 'package:flutterkart/controller/login_provider.dart';
 import 'package:flutterkart/core/app_theme/app_color.dart';
 import 'package:flutterkart/core/app_theme/app_styles.dart';
 import 'package:flutterkart/core/utils/app_size.dart';
+import 'package:flutterkart/core/utils/internet_checker.dart';
 import 'package:flutterkart/core/utils/validator.dart';
 import 'package:flutterkart/view/auth/otp_view.dart';
 import 'package:flutterkart/view/auth/resgister_view.dart';
@@ -20,98 +21,105 @@ class LoginView extends StatelessWidget {
     return Consumer<LoginProvider>(builder: (context, value, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        body: Padding(
-          padding: const EdgeInsets.all(22.0),
-          child: Form(
-            key: value.formKey,
-            child: Column(
-              spacing: 10,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 40,
+        body: SafeArea(
+          child: ConnectivityWrapperWidget(
+            child: Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Form(
+                key: value.formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    spacing: 10,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        "Sign in to your \nAccount",
+                        style: AppStyles.loginText,
+                      ),
+                      Text(
+                        "Enter your email and password to log in",
+                        style: AppStyles.normalText,
+                      ),
+                      Text(
+                        "Email",
+                        style: AppStyles.normalText,
+                      ),
+                      CommonTexfield(
+                          validator: (p0) =>
+                              AppValidator.fieldValidation(p0, "Email"),
+                          hintText: "Enter your email",
+                          controller: value.emialController),
+                      Text(
+                        "Password",
+                        style: AppStyles.normalText,
+                      ),
+                      CommonTexfield(
+                          validator: (p0) =>
+                              AppValidator.fieldValidation(p0, "Password"),
+                          isObscure: true,
+                          hintText: "Enter your Password",
+                          controller: value.passwordController),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CommonTextButton(
+                            onPressed: () {}, text: "Forgot Password ?"),
+                      ),
+                      CommonButton(
+                          isLoad: value.isLoading,
+                          onTap: () {
+                            if (value.formKey.currentState!.validate()) {
+                              value.loginUser(context);
+                            }
+                          },
+                          buttonText: "Log In"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 5,
+                        children: [
+                          Expanded(
+                              child: Container(
+                            color: AppColor.greyColor,
+                            height: 1,
+                          )),
+                          Text(
+                            "Or",
+                            style: TextStyle(color: AppColor.greyColor),
+                          ),
+                          Expanded(
+                              child: Container(
+                            color: AppColor.greyColor,
+                            height: 1,
+                          ))
+                        ],
+                      ),
+                      custonButton(
+                          context, "Login wIth OTP", "assets/images/otp_img.png", () {
+                        value.getOtp(context);
+                      }),
+                      custonButton(context, "Continue with Google",
+                          "assets/images/google_img.png", () {}),
+                      custonButton(context, "Continue with Facebook",
+                          "assets/images/fb_img.png", () {}),
+                      SizedBox(height: 20), 
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Don’t have an account?"),
+                          CommonTextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, ResgisterView.routeName);
+                              },
+                              text: "Sign Up")
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                Text(
-                  "Sign in to your \nAccount",
-                  style: AppStyles.loginText,
-                ),
-                Text(
-                  "Enter your email and password to log in",
-                  style: AppStyles.normalText,
-                ),
-                Text(
-                  "Email",
-                  style: AppStyles.normalText,
-                ),
-                CommonTexfield(
-                    validator: (p0) =>
-                        AppValidator.fieldValidation(p0, "Email"),
-                    hintText: "Enter your email",
-                    controller: value.emialController),
-                Text(
-                  "Password",
-                  style: AppStyles.normalText,
-                ),
-                CommonTexfield(
-                    validator: (p0) =>
-                        AppValidator.fieldValidation(p0, "Password"),
-                    isObscure: true,
-                    hintText: "Enter your Password",
-                    controller: value.passwordController),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CommonTextButton(
-                      onPressed: () {}, text: "Forgot Password ?"),
-                ),
-                CommonButton(
-                    onTap: () {
-                      if (value.formKey.currentState!.validate()) {
-                        value.loginUser(context);
-                      }
-                    },
-                    buttonText: "Log In"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 5,
-                  children: [
-                    Expanded(
-                        child: Container(
-                      color: AppColor.greyColor,
-                      height: 1,
-                    )),
-                    Text(
-                      "Or",
-                      style: TextStyle(color: AppColor.greyColor),
-                    ),
-                    Expanded(
-                        child: Container(
-                      color: AppColor.greyColor,
-                      height: 1,
-                    ))
-                  ],
-                ),
-                custonButton(
-                    context, "Login wIth OTP", "assets/images/otp_img.png", () {
-                  value.getOtp(context);
-                  
-                }),
-                custonButton(context, "Continue with Google",
-                    "assets/images/google_img.png", () {}),
-                custonButton(context, "Continue with Facebook",
-                    "assets/images/fb_img.png", () {}),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Don’t have an account?"),
-                    CommonTextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, ResgisterView.routeName);
-                        },
-                        text: "Sign Up")
-                  ],
-                )
-              ],
+              ),
             ),
           ),
         ),
@@ -119,7 +127,8 @@ class LoginView extends StatelessWidget {
     });
   }
 
-  Widget custonButton(context, String text, String imgPath, Function()? onTap) {
+  Widget custonButton(
+      context, String text, String imgPath, Function()? onTap) {
     return GestureDetector(
         onTap: onTap,
         child: Container(
@@ -156,3 +165,4 @@ class LoginView extends StatelessWidget {
         ));
   }
 }
+

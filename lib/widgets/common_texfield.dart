@@ -5,6 +5,7 @@ class CommonTexfield extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardtype;
   final String hintText;
+  final IconData? prefixIcon;
 
   final TextEditingController controller;
   final bool? isObscure;
@@ -14,7 +15,8 @@ class CommonTexfield extends StatefulWidget {
       required this.controller,
       this.isObscure = false,
       this.keyboardtype = TextInputType.emailAddress,
-      this.validator});
+      this.validator,
+      this.prefixIcon});
 
   @override
   State<CommonTexfield> createState() => _CommonTexfieldState();
@@ -57,6 +59,12 @@ class _CommonTexfieldState extends State<CommonTexfield> {
         hintStyle: TextStyle(
             color:
                 _focusNode.hasFocus ? AppColor.blackColor : AppColor.greyColor),
+        prefixIcon: widget.prefixIcon != null
+            ? Icon(widget.prefixIcon,
+                color: _focusNode.hasFocus
+                    ? AppColor.blackColor
+                    : AppColor.greyColor)
+            : null,
         suffixIcon: widget.isObscure == true
             ? IconButton(
                 onPressed: () {

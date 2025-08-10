@@ -4,8 +4,12 @@ import 'package:flutterkart/core/app_theme/app_color.dart';
 class CommonButton extends StatelessWidget {
   final String buttonText;
   final Function()? onTap;
+  final bool? isLoad;
   const CommonButton(
-      {super.key, required this.onTap, required this.buttonText});
+      {super.key,
+      required this.onTap,
+      required this.buttonText,
+      this.isLoad = false});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class CommonButton extends StatelessWidget {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12),
             gradient: LinearGradient(
               colors: [AppColor.buttonLightColor, AppColor.buttonDarkColor],
               begin: Alignment.topCenter,
@@ -28,15 +32,21 @@ class CommonButton extends StatelessWidget {
                 offset: Offset(0, 3),
               ),
             ]),
-        child: Center(
-          child: Text(
-            buttonText,
-            style: TextStyle(
-                color: AppColor.whiteColor,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
+        child: isLoad == true
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: AppColor.whiteColor,
+                ),
+              )
+            : Center(
+                child: Text(
+                  buttonText,
+                  style: TextStyle(
+                      color: AppColor.whiteColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
       ),
     );
   }

@@ -46,7 +46,7 @@ class ProductModel {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       shortDescription: json['short_description'] ?? '',
-      thumbnailImage: json['thumbnail_image'],
+      thumbnailImage: json['thumbnail_image']??"",
       stockQuantity: json['stock_quantity'] ?? 0,
       inStock: json['in_stock'] ?? false,
       featuredTag: json['featured_tag'] ?? false,
@@ -55,7 +55,7 @@ class ProductModel {
       replacementAvailable: json['replacement_available'] ?? false,
       cashOnDeliveryAvailable: json['cash_on_delivery_available'] ?? false,
       price: json['price'] ?? 0,
-      offerInfo: json['offer_info'],
+      offerInfo: json['offer_info']??"",
     );
   }
 }

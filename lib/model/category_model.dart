@@ -13,7 +13,7 @@ class CategoryModel {
     return CategoryModel(
       categoryId: json['category_id'] ?? 0,
       categoryName: json['category_name'] ?? '',
-      categoryImage: json['category_image'],
+      categoryImage: json['category_image']??"",
     );
   }
 }

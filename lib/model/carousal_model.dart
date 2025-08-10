@@ -5,7 +5,7 @@ class CarousalModel {
   final String description;
   final String offerType;
   final String rate;
-  final String? image;
+  final String image;
 
   CarousalModel({
     required this.offerId,
@@ -14,7 +14,7 @@ class CarousalModel {
     required this.description,
     required this.offerType,
     required this.rate,
-    this.image,
+   required this.image,
   });
 
   factory CarousalModel.fromJason(Map<String, dynamic> json) {

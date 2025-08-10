@@ -17,4 +17,9 @@ class AppStyles {
     fontSize: 14,
     fontWeight: FontWeight.bold,
   );
+    static TextStyle headerText = TextStyle(
+    color: AppColor.blackColor,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 }
